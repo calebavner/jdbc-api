@@ -4,9 +4,7 @@ import org.midasvision.exceptions.DbException;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
 
 public class DB {
@@ -23,7 +21,7 @@ public class DB {
     }
   }
 
-  private static Connection getConnection() {
+  public static Connection getConnection() {
     if(conn == null) {
       try {
         Properties props = loadProps();
@@ -41,10 +39,28 @@ public class DB {
     if(conn != null){
       try {
         conn.close();
-        
+
       } catch (SQLException e) {
         throw new DbException(e.getMessage());
       }
     }
+  }
+
+  public static void closeStatement(Statement s) {
+    if(s != null)
+      try {
+        s.close();
+      } catch (SQLException e){
+        throw new DbException(e.getMessage());
+      }
+  }
+
+  public static void closeResultSet(ResultSet rs) {
+    if(rs != null)
+      try {
+        rs.close();
+      } catch (SQLException e){
+        throw new DbException(e.getMessage());
+      }
   }
 }
